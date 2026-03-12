@@ -84,7 +84,7 @@ def normalize_version(version: Optional[str]) -> str:
         return ''
     v = version.strip().lower()
     v = re.sub(r'\.0+(?=\.|$)', '', v)
-    v = v.rstrip('.')  # ✅ ИСПРАВЛЕНО: убираем trailing точки
+    v = v.rstrip('.') 
     return v
 
 
@@ -260,7 +260,7 @@ def process_plist(file_path: str, output_dir: Optional[str] = None, force_offset
     # Check for offset-patchable versions first
     is_offset_version, matched_key = is_supported_offset_version(info['ios_version'])
     
-    # ✅ ИСПРАВЛЕНО: было "and not force_offset == False"
+    
     if is_offset_version:
         log.append(f"→ Using OFFSET patching for {matched_key}")
         success, msg, patched_content = patch_plist_offset(content, matched_key)
@@ -297,14 +297,14 @@ def process_plist(file_path: str, output_dir: Optional[str] = None, force_offset
         log.append(msg)
         
         if success and output_dir:
-            # ✅ Формируем путь как в PHP: Maker/{Model}/{Version}/
+            
             model_folder = (info['device_model'] or 'Unknown-Model').replace(',', '-')
             version_folder = info['ios_version'] or f'Unknown-{matched_key}'
             save_dir = Path(output_dir) / model_folder / version_folder
             save_dir.mkdir(parents=True, exist_ok=True)
             save_path = save_dir / 'com.apple.MobileGestalt.plist'
             
-            # ✅ Проверка: если файл уже есть — не перезаписываем (как в PHP)
+            
             if save_path.exists():
                 result['message'] = f"⚠️ File already exists: {save_path}"
                 log.append(result['message'])
@@ -337,7 +337,7 @@ def main():
     
     input_path = os.path.expanduser(os.path.expandvars(args[0]))
     
-    # ✅ АВТО-ПАПКА: Maker/ рядом со скриптом (как в PHP-версии)
+    
     script_dir = os.path.dirname(os.path.abspath(__file__))
     output_dir = os.path.join(script_dir, 'Maker')
     os.makedirs(output_dir, exist_ok=True)
